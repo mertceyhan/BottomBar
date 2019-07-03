@@ -77,6 +77,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
     private int inActiveTabColor;
     private int activeTabColor;
     private int badgeBackgroundColor;
+    private float badgeTextSize;
     private boolean hideBadgeWhenActive;
     private boolean longPressHintsEnabled;
     private int titleTextAppearance;
@@ -189,7 +190,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
         maxFixedItemWidth = MiscUtils.dpToPixel(getContext(), 168);
 
         TypedArray ta = context.getTheme()
-                               .obtainStyledAttributes(attrs, R.styleable.BottomBar, defStyleAttr, defStyleRes);
+                .obtainStyledAttributes(attrs, R.styleable.BottomBar, defStyleAttr, defStyleRes);
 
         try {
             tabXmlResource = ta.getResourceId(R.styleable.BottomBar_bb_tabXmlResource, 0);
@@ -208,6 +209,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
             inActiveTabColor = ta.getColor(R.styleable.BottomBar_bb_inActiveTabColor, defaultInActiveColor);
             activeTabColor = ta.getColor(R.styleable.BottomBar_bb_activeTabColor, defaultActiveColor);
             badgeBackgroundColor = ta.getColor(R.styleable.BottomBar_bb_badgeBackgroundColor, Color.RED);
+            badgeTextSize = ta.getDimension(R.styleable.BottomBar_bb_badgeTextSize, 0);
             hideBadgeWhenActive = ta.getBoolean(R.styleable.BottomBar_bb_badgesHideWhenActive, true);
             titleTextAppearance = ta.getResourceId(R.styleable.BottomBar_bb_titleTextAppearance, 0);
             titleTypeFace = getTypeFaceFromAsset(ta.getString(R.styleable.BottomBar_bb_titleTypeFace));
@@ -318,6 +320,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
                 .activeTabColor(activeTabColor)
                 .barColorWhenSelected(defaultBackgroundColor)
                 .badgeBackgroundColor(badgeBackgroundColor)
+                .badgeTextSize(badgeTextSize)
                 .hideBadgeWhenSelected(hideBadgeWhenActive)
                 .titleTextAppearance(titleTextAppearance)
                 .titleTypeFace(titleTypeFace)
@@ -395,7 +398,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
         inActiveShiftingItemWidth = (int) (proposedItemWidth * 0.9);
         activeShiftingItemWidth = (int) (proposedItemWidth + (proposedItemWidth * ((tabsToAdd.length - 1) * 0.1)));
         int height = Math.round(getContext().getResources()
-                                            .getDimension(R.dimen.bb_height));
+                .getDimension(R.dimen.bb_height));
 
         for (BottomBarTab tabView : tabsToAdd) {
             ViewGroup.LayoutParams params = tabView.getLayoutParams();
@@ -935,7 +938,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 
         if (shouldShowHint) {
             Toast.makeText(getContext(), longClickedTab.getTitle(), Toast.LENGTH_SHORT)
-                 .show();
+                    .show();
         }
 
         return true;
@@ -1054,24 +1057,24 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
     private void backgroundCrossfadeAnimation(final int newColor) {
         ViewCompat.setAlpha(backgroundOverlay, 0);
         ViewCompat.animate(backgroundOverlay)
-                  .alpha(1)
-                  .setListener(new ViewPropertyAnimatorListenerAdapter() {
-                      @Override
-                      public void onAnimationEnd(View view) {
-                          onEnd();
-                      }
+                .alpha(1)
+                .setListener(new ViewPropertyAnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(View view) {
+                        onEnd();
+                    }
 
-                      @Override
-                      public void onAnimationCancel(View view) {
-                          onEnd();
-                      }
+                    @Override
+                    public void onAnimationCancel(View view) {
+                        onEnd();
+                    }
 
-                      private void onEnd() {
-                          outerContainer.setBackgroundColor(newColor);
-                          backgroundOverlay.setVisibility(View.INVISIBLE);
-                          ViewCompat.setAlpha(backgroundOverlay, 1);
-                      }
-                  })
-                  .start();
+                    private void onEnd() {
+                        outerContainer.setBackgroundColor(newColor);
+                        backgroundOverlay.setVisibility(View.INVISIBLE);
+                        ViewCompat.setAlpha(backgroundOverlay, 1);
+                    }
+                })
+                .start();
     }
 }

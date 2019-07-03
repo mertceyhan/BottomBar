@@ -13,6 +13,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -61,6 +62,7 @@ public class BottomBarTab extends LinearLayout {
     private int activeColor;
     private int barColorWhenSelected;
     private int badgeBackgroundColor;
+    private float badgeTextSize;
     private boolean badgeHidesWhenActive;
     private AppCompatImageView iconView;
     private TextView titleView;
@@ -84,6 +86,7 @@ public class BottomBarTab extends LinearLayout {
         setActiveColor(config.activeTabColor);
         setBarColorWhenSelected(config.barColorWhenSelected);
         setBadgeBackgroundColor(config.badgeBackgroundColor);
+        setBadgeTextSize(config.badgeTextSize);
         setBadgeHidesWhenActive(config.badgeHidesWhenSelected);
         setTitleTextAppearance(config.titleTextAppearance);
         setTitleTypeface(config.titleTypeFace);
@@ -92,7 +95,7 @@ public class BottomBarTab extends LinearLayout {
     void prepareLayout() {
         inflate(getContext(), getLayoutResource(), this);
         setOrientation(VERTICAL);
-        setGravity(isTitleless? Gravity.CENTER : Gravity.CENTER_HORIZONTAL);
+        setGravity(isTitleless ? Gravity.CENTER : Gravity.CENTER_HORIZONTAL);
         setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         setBackgroundResource(MiscUtils.getDrawableRes(getContext(), R.attr.selectableItemBackgroundBorderless));
 
@@ -280,6 +283,14 @@ public class BottomBarTab extends LinearLayout {
         }
     }
 
+    public void setBadgeTextSize(float badgeTextSize) {
+        this.badgeTextSize = badgeTextSize;
+
+        if (badge != null) {
+            badge.setTextSize(TypedValue.COMPLEX_UNIT_PX, badgeTextSize);
+        }
+    }
+
     public boolean getBadgeHidesWhenActive() {
         return badgeHidesWhenActive;
     }
@@ -328,7 +339,7 @@ public class BottomBarTab extends LinearLayout {
 
         if (badge == null) {
             badge = new BottomBarBadge(getContext());
-            badge.attachToTab(this, badgeBackgroundColor);
+            badge.attachToTab(this, badgeBackgroundColor, badgeTextSize);
         }
 
         badge.setCount(count);
@@ -647,6 +658,7 @@ public class BottomBarTab extends LinearLayout {
         private final int activeTabColor;
         private final int barColorWhenSelected;
         private final int badgeBackgroundColor;
+        private final float badgeTextSize;
         private final int titleTextAppearance;
         private final Typeface titleTypeFace;
         private boolean badgeHidesWhenSelected = true;
@@ -658,6 +670,7 @@ public class BottomBarTab extends LinearLayout {
             this.activeTabColor = builder.activeTabColor;
             this.barColorWhenSelected = builder.barColorWhenSelected;
             this.badgeBackgroundColor = builder.badgeBackgroundColor;
+            this.badgeTextSize = builder.badgeTextSize;
             this.badgeHidesWhenSelected = builder.hidesBadgeWhenSelected;
             this.titleTextAppearance = builder.titleTextAppearance;
             this.titleTypeFace = builder.titleTypeFace;
@@ -670,6 +683,7 @@ public class BottomBarTab extends LinearLayout {
             private int activeTabColor;
             private int barColorWhenSelected;
             private int badgeBackgroundColor;
+            private float badgeTextSize;
             private boolean hidesBadgeWhenSelected = true;
             private int titleTextAppearance;
             private Typeface titleTypeFace;
@@ -701,6 +715,11 @@ public class BottomBarTab extends LinearLayout {
 
             public Builder badgeBackgroundColor(@ColorInt int color) {
                 this.badgeBackgroundColor = color;
+                return this;
+            }
+
+            public Builder badgeTextSize(float badgeTextSize) {
+                this.badgeTextSize = badgeTextSize;
                 return this;
             }
 
